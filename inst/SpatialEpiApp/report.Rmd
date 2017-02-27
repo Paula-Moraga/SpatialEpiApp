@@ -1,0 +1,255 @@
+---
+title: ""
+output: pdf_document
+graphics: yes
+classoption: landscape
+footer: So is this
+header-includes:
+   - \usepackage{pgffor}
+   - \usepackage{longtable}
+   - \usepackage{color}
+params:
+  daterange: NA
+  typeofanalysis: NA
+  temporalunit: NA
+  datosP: NA
+  fechasformatocorrecto: NA
+  vecVblesPintar: NA
+  vecVblesTabla: NA
+  tablaClusters: NA
+---
+
+ 
+   
+\begin{center}
+\begin{huge}
+Report
+\end{huge}
+\end{center}
+Created with [SpatialEpiApp](http://Paula-Moraga.github.io/software)
+
+
+
+* Date range: `r params$daterange`
+* Type of analysis: `r params$typeofanalysis`
+* Temporal unit: `r params$temporalunit`
+
+```{r echo=FALSE, out.width='10%', results='asis'}
+
+datosP<-params$datosP
+
+fechasformatocorrecto<-params$fechasformatocorrecto
+vecTimes<-unique(datosP$time)
+n<-length(vecTimes)
+#vecVbles<-c("Population","Observed","Expected","SIR")
+#vecVbles<-c("Population","Observed","Expected","SIR","Risk","LowerLimitCI","UpperLimitCI")
+vecVblesPintar<-params$vecVblesPintar
+vecVblesTabla<-params$vecVblesTabla
+tablaClusters<-params$tablaClusters
+
+vecVblesPintarprimeralinea<-params$vecVblesPintar
+vecVblesTablaprimeralinea<-params$vecVblesTabla
+
+indl<-which(vecVblesPintarprimeralinea=="LowerLimitCI")
+if(length(indl)>0){vecVblesPintarprimeralinea[indl]<-"2.5 percentile"}
+indl<-which(vecVblesPintarprimeralinea=="UpperLimitCI")
+if(length(indl)>0){vecVblesPintarprimeralinea[indl]<-"97.5 percentile"}
+indl<-which(vecVblesTablaprimeralinea=="LowerLimitCI")
+if(length(indl)>0){vecVblesTablaprimeralinea[indl]<-"2.5 percentile"}
+indl<-which(vecVblesTablaprimeralinea=="UpperLimitCI")
+if(length(indl)>0){vecVblesTablaprimeralinea[indl]<-"97.5 percentile"}
+
+plPintar<-paste("c",paste(rep("c",length(vecVblesPintar)),collapse=""))
+plTabla<-paste("l",paste(rep("r",length(vecVblesTabla)),collapse=""))
+primeralineaPintar<-paste("&",paste(vecVblesPintarprimeralinea,collapse="&"),"\\\\")
+primeralineaTabla<-paste("&",paste(vecVblesTablaprimeralinea,collapse="&"),"\\\\")
+
+fnPaste<-function(s){
+p<-paste(paste(s , collapse="&"),"\\\\")
+return(p)
+} 
+
+sizemaps<-52
+if(length(vecVblesPintar)==5){
+ sizemaps<-40
+}
+if(length(vecVblesPintar)==6){
+ sizemaps<-31
+}
+if(length(vecVblesPintar)==7){
+ sizemaps<-26
+}
+if(length(vecVblesPintar)==8){
+ sizemaps<-22
+}
+#sizemaps<-60-7*length(vecVblesPintar)
+
+
+```
+
+```{r echo=FALSE, out.width='10%', results='asis'}
+# Maps
+
+if(length(vecVblesPintar)>0){
+
+cat(
+  sprintf("\\begin{longtable}{%s}",plPintar),
+  sprintf(primeralineaPintar),
+  sprintf("\\hline"),
+  sprintf("&\\\\"),
+  sprintf("\\endhead"))
+
+
+
+for(i in 1:n){
+f<-paste(vecTimes[i])
+fcorrecto<-fechasformatocorrecto[i]
+vecf<-paste("plots/Map",vecTimes[i],vecVblesPintar,".png",sep="")
+#cat(sprintf("\\raisebox{2cm}{%s}", paste(fcorrecto,f)))
+cat(sprintf("\\raisebox{1.5cm}{%s}", paste(fcorrecto)))
+for(j in 1:length(vecVblesPintar)){
+cat(sprintf("&\\includegraphics[width=%dmm]{%s}", sizemaps, vecf[j]))
+}
+cat(sprintf("\\\\[.5cm]")) 
+}
+veclastf<-paste("plots/TemporalTrend",vecVblesPintar,".png",sep="")
+for(j in 1:length(vecVblesPintar)){
+cat(sprintf("&\\includegraphics[width=%dmm]{%s}", sizemaps, veclastf[j]))
+}
+cat(sprintf("\\\\")) 
+cat(sprintf("\\end{longtable}"))
+
+}
+```
+
+
+
+
+
+\newpage
+
+
+# Summary data
+
+```{r echo=FALSE, results = 'asis'}
+# Table summary data for all dates
+
+if(length(vecVblesTabla)>0){
+
+if(params$typeofanalysis!="Spatial"){
+#All years
+if(length(vecVblesTabla)>1){
+s<-sapply(datosP[,vecVblesTabla], summary)
+s<-cbind(rownames(s),matrix(s,nrow=nrow(s)))
+}else{
+s<-summary(datosP[,vecVblesTabla])
+s<-cbind(names(s),s)
+}
+a<-apply(s,1,fnPaste)
+fcorrecto<-params$daterange
+
+cat(
+  sprintf("\\begin{longtable}{%s}",plTabla),
+  sprintf(primeralineaTabla),
+  sprintf("\\hline"),
+  sprintf("\\endhead"))
+cat(
+  sprintf("{%s}",fcorrecto),
+  sprintf("\\\\[.1cm]"),
+  sprintf(a),
+  sprintf("[.2cm]")
+  )
+
+
+cat(sprintf("\\end{longtable}"))
+}
+}
+```
+
+
+```{r echo=FALSE, results = 'asis'}
+# Table summary data for each date
+
+if(length(vecVblesTabla)>0){
+
+cat(
+  sprintf("\\begin{longtable}{%s}",plTabla),
+  sprintf(primeralineaTabla),
+  sprintf("\\hline"),
+  sprintf("\\endhead"))
+
+
+
+
+for(i in 1:n){
+f<-paste(vecTimes[i])
+fcorrecto<-fechasformatocorrecto[i]
+datostime<-datosP[which(datosP$time==f),vecVblesTabla]
+
+
+if(length(vecVblesTabla)>1){
+s<-sapply(datostime, summary)
+s<-cbind(rownames(s),matrix(s,nrow=nrow(s)))
+}else{
+s<-summary(datostime)
+s<-cbind(names(s),s)
+}
+a<-apply(s,1,fnPaste)
+
+
+cat(
+  sprintf(as.character(fcorrecto)),
+  sprintf("\\\\[.1cm]"),
+  sprintf(a),
+  sprintf("[.2cm]")
+  )
+}
+
+
+cat(sprintf("\\end{longtable}"))
+
+}
+      
+```
+
+\newpage
+
+
+# Clusters
+
+```{r echo=FALSE, results = 'asis'}
+#Table clusters
+
+if(!is.null(tablaClusters)){
+
+  
+#All years
+s<-tablaClusters
+a<-apply(s,1,fnPaste)
+
+
+plTablaClusters<-paste(paste(rep("r",ncol(tablaClusters)),collapse=""))
+plTablaClusters<-paste("p{1cm}",paste(rep("p{2cm}",ncol(tablaClusters)-2),collapse=""),"p{6cm}")
+primeralineaTablaClusters<-paste(paste(names(tablaClusters),collapse="&"),"\\\\")
+
+
+cat(
+  sprintf("\\begin{longtable}{%s}",plTablaClusters),
+  sprintf(primeralineaTablaClusters),
+  sprintf("\\hline"),
+  sprintf("\\endhead"))
+cat(
+  #sprintf("{%s}",fcorrecto),
+  sprintf("\\\\[.1cm]"),
+  sprintf(a),
+  sprintf("[.2cm]")
+  )
+
+
+cat(sprintf("\\end{longtable}"))
+}
+
+```
+
+
+
