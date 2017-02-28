@@ -1,7 +1,7 @@
 Package: SpatialEpiApp
 Type: Package
 Title: A Shiny Web Application for the Analysis of Spatial and Spatio-Temporal Disease Data
-Version: 0.1
+Version: 0.1.9000
 Date: 2017-02-27
 Authors@R: person("Paula", "Moraga", email = "p.e.moraga-serrano@lancaster.ac.uk", role = c("aut", "cre"))
 Maintainer: Paula Moraga <p.e.moraga-serrano@lancaster.ac.uk>
