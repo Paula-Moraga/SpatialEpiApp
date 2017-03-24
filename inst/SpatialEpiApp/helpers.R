@@ -314,7 +314,9 @@ fnPlotMap<-function(maparea, vblePintar, nombreGuardar, minlegend, maxlegend, di
    }
   
     g <- ggplot() + geom_polygon(data = maparea, aes_string(x = "long", y = "lat", group = "group", fill=vblePintar)) +
-             coord_map() + theme_minimal() + sc + gt + leyendaquitar
+            # delete map projection
+            # coord_map() +
+      theme_minimal() + sc + gt + leyendaquitar
 
    png(paste("plots/",nombreGuardar,".png",sep=""), width=5, height=5, units="in", res=300)
    plot(g)

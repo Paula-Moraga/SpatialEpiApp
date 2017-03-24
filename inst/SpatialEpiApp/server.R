@@ -1,6 +1,9 @@
 # By default the file size limit is 5MB. Here limit is 70MB.
 options(shiny.maxRequestSize = 70*1024^2)
 
+# Increase memory limit
+memory.size(max = FALSE)
+
 source("helpers.R")
 
 shinyServer(function(input, output, session){
@@ -551,7 +554,10 @@ observe({
       file.rename(shpdf$datapath[i], shpdf$name[i])
     }
   setwd(previouswd)
-  map <- readShapePoly(paste(uploaddirectory, shpdf$name[grep(pattern="*.shp", shpdf$name)], sep="/"),  delete_null_obj=TRUE)
+  #map <- readShapePoly(paste(uploaddirectory, shpdf$name[grep(pattern="*.shp", shpdf$name)], sep="/"),  delete_null_obj=TRUE)
+  map <- readOGR(paste(uploaddirectory, shpdf$name[grep(pattern="*.shp", shpdf$name)], sep="/"))#,  delete_null_obj=TRUE)
+  map <- spTransform(map, CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
+  
   rv$map<-map
 
 })
