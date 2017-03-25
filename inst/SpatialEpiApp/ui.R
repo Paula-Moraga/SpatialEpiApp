@@ -15,6 +15,7 @@ library(ggplot2)
 library(RColorBrewer)
 library(rgeos)
 library(mapproj)
+library(rgdal)
 
 
 

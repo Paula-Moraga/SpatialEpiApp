@@ -16,6 +16,7 @@ Imports:
   mapproj,
   maptools,
   RColorBrewer,
+  rgdal,
   rgeos,
   rmarkdown,
   shiny,

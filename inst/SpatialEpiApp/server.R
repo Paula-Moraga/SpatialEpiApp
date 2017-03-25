@@ -343,6 +343,7 @@ observeEvent(input$makemapsOESIRButton, {
 observeEvent(input$estimateriskButton, {
 
   inlainstalled<-require(INLA)
+  #inlainstalled<-FALSE
   if(!inlainstalled){
     updateTextInput(session, "selectestimaterisk", value = 'notdone')
     msgerrorinla <- paste0("To estimate risk the R-INLA package needs to be installed, http://www.r-inla.org.")
@@ -557,7 +558,7 @@ observe({
   #map <- readShapePoly(paste(uploaddirectory, shpdf$name[grep(pattern="*.shp", shpdf$name)], sep="/"),  delete_null_obj=TRUE)
   map <- readOGR(paste(uploaddirectory, shpdf$name[grep(pattern="*.shp", shpdf$name)], sep="/"))#,  delete_null_obj=TRUE)
   map <- spTransform(map, CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
-  
+
   rv$map<-map
 
 })

@@ -84,6 +84,7 @@ leaflet | Create Interactive Web Maps with the JavaScript 'Leaflet' Library
 mapproj | Converts latitute/longitude into projected coordinates
 maptools  | Set of tools for manipulating and reading geographic data, in particular ESRI shapefiles
 RColorBrewer  | Provides color schemes for maps and other graphics
+rgdal | Provides bindings to Frank Warmerdam's Geospatial Data Abstraction Library (GDAL)
 rgeos | Interface to Geometry Engine - Open Source (GEOS) using the C API for topology operations on geometries
 rmarkdown  | Convert R Markdown documents into a variety of formats including HTML, MS Word, PDF, and Beamer
 R-INLA  | Performs full Bayesian analysis on generalised additive mixed models using Integrated Nested Laplace Approximations
@@ -113,6 +114,9 @@ R (2016). rmarkdown: Dynamic Documents for R. R package version 1.2, URL https:/
 - Besag J, York J, Mollie A (1991). "Bayesian image restoration with applications in spatial statistics (with discussion)." Annals of the Institute of Statistical Mathemathics, 43, 1-59.
 
 - Bivand R, Lewin-Koh N (2016). maptools: Tools for Reading and Handling Spatial Objects. R package version 0.8-39, URL https://CRAN.R-project.org/package=maptools.
+
+- Bivand R, Keitt T, Rowlingson B (2016). rgdal: Bindings for the Geospatial Data Abstraction Library. R
+  package version 1.2-5. https://CRAN.R-project.org/package=rgdal
 
 - Bivand R, Piras G (2015). "Comparing Implementations of Estimation Methods for Spatial Econometrics." Journal of Statistical Software, 63(18), 1-36.
 
