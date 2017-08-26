@@ -66,12 +66,12 @@ methodology and the developing tools employed.
 ### Dependencies
 
 
-**SpatialEpiApp** has been developed using **R** and **Shiny** and is dependent on the following softwares and **R** packages:
+**SpatialEpiApp** has been developed using **R** and **Shiny** and is dependent on the following software and **R** packages:
 
 
 |  |   |
 --- | ----
-**Softwares**   | 
+**Software**   | 
 R  | Language and environment for statistical computing and graphics
 SaTScan  | Software that analyzes spatial, temporal and space-time data using scan statistics
 **R packages** |
@@ -90,6 +90,7 @@ rmarkdown  | Convert R Markdown documents into a variety of formats including HT
 R-INLA  | Performs full Bayesian analysis on generalised additive mixed models using Integrated Nested Laplace Approximations
 shiny  | Web Application Framework for R
 shinyjs| Perform common useful JavaScript operations in Shiny apps that will greatly improve the apps without having to know any JavaScript
+sp | Classes and Methods for Spatial Data
 SpatialEpi  | Contains methods for cluster detection, disease mapping and plotting methods
 spdep   | Contains a collection of functions for spatial dependence: weighting schemes, statistics and models
 xts   | Extensible time series class and methods
@@ -101,8 +102,8 @@ xts   | Extensible time series class and methods
 
 ### References
 
-- Moraga P (2017). SpatialEpiApp: A Shiny web application for the analysis of spatial and spatio-temporal disease data.
-Under review.
+- Moraga P (2017), "SpatialEpiApp: A Shiny web application for the analysis of spatial and spatio-temporal disease data." Spatial and Spatio-temporal Epidemiology.
+DOI: https://doi.org/10.1016/j.sste.2017.08.001
 
 - Allaire J, Cheng J, Xie Y, McPherson J, Chang W, Allen J, Wickham H, Atkins A, Hyndman
 R (2016). rmarkdown: Dynamic Documents for R. R package version 1.2, URL https://CRAN.R-project.org/package=rmarkdown.
@@ -126,7 +127,6 @@ R (2016). rmarkdown: Dynamic Documents for R. R package version 1.2, URL https:/
 
 - Cheng J, Xie Y (2016). leaflet: Create Interactive Web Maps with the JavaScript 'Leaflet' Library. R package version 1.0.1, URL https://CRAN.R-project.org/package=leaflet.
 
-
 - Elliott P, Wakefield J, Best N, David Briggs e (2000). Spatial Epidemiology: Methods and Applications. Oxford University Press.
 
 - Kim AY, Wakefield J (2016). SpatialEpi: Methods and Data for Spatial Epidemiology. R package version 1.2.2, URL https://CRAN.R-project.org/package=SpatialEpi.
@@ -135,9 +135,7 @@ R (2016). rmarkdown: Dynamic Documents for R. R package version 1.2, URL https:/
 
 - Kulldorff M (2006a). SaTScan(TM) v. 7.0. Software for the spatial and space-time scan statistics. URL http://www.satscan.org/.
 
-
 - Kulldorff M (2006b). "Tests of spatial randomness adjusted for an inhomogeneity: A general framework." Journal of the American Statistical Association, 101(475), 1289-1305.
-
 
 - Kulldorff M, Nagarwalla N (1995). "Spatial disease clusters: detection and inference." Statistics in Medicine, 14, 799-810.
 
@@ -153,14 +151,16 @@ R (2016). rmarkdown: Dynamic Documents for R. R package version 1.2, URL https:/
 
 - Neuwirth E (2014). RColorBrewer: ColorBrewer Palettes. R package version 1.1-2, URL https://CRAN.R-project.org/package=RColorBrewer.
 
-- R Core Team (2017). R: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org.
+- Pebesma E, Bivand R, Rowlingson B, Gómez-Rubio V, Hijmans R, Sumner M, MacQueen D, Lemon J, O'Brien J (2016).
+sp: Classes and Methods for Spatial Data.
+R package version 1.2-5, URL https://CRAN.R-project.org/package=sp
 
+- R Core Team (2017). R: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org.
 
 - Rue H, Martino S, Chopin N (2009). "Approximate Bayesian inference for latent Gaussian models by using integrated nested Laplace approximations."Journal of the Royal Statistical Society, Series B, 71(2), 319-392.
 
 - Ryan JA, Ulrich JM (2014). xts: eXtensible Time Series. R package version 0.9-7, URL https://CRAN.R-project.org/package=xts.
   
-
 - Vaidyanathan R, Xie Y, Allaire J, Cheng J, Russell K (2016). htmlwidgets: HTML Widgets for R. R package version 0.7, URL https://CRAN.R-project.org/package=htmlwidgets.
 
 - Vanderkam D, Allaire J, Owen J, Gromer D, Shevtsov P, Thieurmel B (2016). dygraphs: Interface to 'Dygraphs' Interactive Time Series Charting Library. R package version 1.1.1.3, URL https://CRAN.R-project.org/package=dygraphs.

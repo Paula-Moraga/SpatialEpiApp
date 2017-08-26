@@ -556,7 +556,8 @@ observe({
     }
   setwd(previouswd)
   #map <- readShapePoly(paste(uploaddirectory, shpdf$name[grep(pattern="*.shp", shpdf$name)], sep="/"),  delete_null_obj=TRUE)
-  map <- readOGR(paste(uploaddirectory, shpdf$name[grep(pattern="*.shp", shpdf$name)], sep="/"))#,  delete_null_obj=TRUE)
+  #reads the file that finishes with .shp using $ at the end: grep(pattern="*.shp$", shpdf$name)
+  map <- readOGR(paste(uploaddirectory, shpdf$name[grep(pattern="*.shp$", shpdf$name)], sep="/"))#,  delete_null_obj=TRUE)
   map <- spTransform(map, CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
 
   rv$map<-map

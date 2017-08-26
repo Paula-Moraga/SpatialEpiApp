@@ -4,7 +4,7 @@ Risk estimates are obtained using **R-INLA**, http://www.r-inla.org
 
 |Settings: |
 | --- |
-|Spatial model: Besag el al. (1991) |
+|Spatial model: Besag et al. (1991) |
 |Spatio-temporal model: Bernardinelli et al. (1995) |
 
 

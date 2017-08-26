@@ -17,4 +17,11 @@
 
 To cite **SpatialEpiApp** in publications use:
 
-Paula Moraga (2017). SpatialEpiApp: A Shiny web application for the analysis of spatial and spatio-temporal disease data. R package version 0.1, URL https://CRAN.R-project.org/package=SpatialEpiApp.
+Paula Moraga (2017), SpatialEpiApp: A Shiny web application for the analysis of spatial and spatio-temporal disease data. Spatial and Spatio-temporal Epidemiology.
+DOI: https://doi.org/10.1016/j.sste.2017.08.001
+
+
+<!-- Paula Moraga (2017). SpatialEpiApp: A Shiny web application for the analysis of spatial and spatio-temporal disease data. R package version 0.1, URL https://CRAN.R-project.org/package=SpatialEpiApp.
+-->
+
+
