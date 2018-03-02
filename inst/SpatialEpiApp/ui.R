@@ -100,7 +100,7 @@ fluidRow(
          h3("2. Upload data (.csv file)"),
 
          helpText(div("File needs to have columns",  strong("<area id><date><population><cases>"),"."),
-                  div("Optional. It can also include columns with up to four covariates",strong("<covariate1>...<covariate4>"),".")),
+                  div("Optional. It can also include columns with up to four individual level covariates or four areal level covariates",strong("<covariate1>...<covariate4>"),".")),
          fileInput("file1", "", accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
 
          helpText("Select columns id, date, population and cases in the data."),
@@ -109,16 +109,35 @@ fluidRow(
          fluidRow(column(6, selectInput("columnpopindata", label = "population", choices = c(""), selected = "")),
                   column(6, selectInput("columncasesindata", label = "cases", choices = c(""), selected = ""))),
 
+         radioButtons("typecovariates", "Type covariates", inline=TRUE, c("Individual" = "individual", "Areal" = "areal"), selected="individual"),
+
+         conditionalPanel(condition = "input.typecovariates == 'individual'",
          helpText(div("Optional. Select columns covariate 1, covariate 2, covariate 3, covariate 4."),
                   div("Leave the boxes with - if the data do not contain covariates.")),
          fluidRow(column(6, selectInput("columncov1indata", label = "covariate 1", choices = c(""), selected = "")),
                   column(6, selectInput("columncov2indata", label = "covariate 2", choices = c(""), selected = ""))),
          fluidRow(column(6, selectInput("columncov3indata", label = "covariate 3", choices = c(""), selected = "")),
-                  column(6, selectInput("columncov4indata", label = "covariate 4", choices = c(""), selected = ""))),
+                  column(6, selectInput("columncov4indata", label = "covariate 4", choices = c(""), selected = "")))
+
+         ),
+
+
+         conditionalPanel(condition = "input.typecovariates == 'areal'",
+                          helpText(div("Optional. Select columns covariate 1, covariate 2, covariate 3, covariate 4."),
+                                   div("Leave the boxes with - if the data do not contain covariates.")),
+                          fluidRow(column(6, selectInput("columnarealcov1indata", label = "covariate 1", choices = c(""), selected = "")),
+                                   column(6, selectInput("columnarealcov2indata", label = "covariate 2", choices = c(""), selected = ""))),
+                          fluidRow(column(6, selectInput("columnarealcov3indata", label = "covariate 3", choices = c(""), selected = "")),
+                                   column(6, selectInput("columnarealcov4indata", label = "covariate 4", choices = c(""), selected = "")))
+
+         ),
+
+
 
          helpText(div("Note: Area id is a unique identifier of the area. Area id in the data should be the same as area id in the map.
                        Dates can be written in year (yyyy), month (yyyy-mm) or day (yyyy-mm-dd) format. Dates should be consecutive.
-                       Data should contain the population and cases for all combinations of area id, date and covariates."))),
+                       Data should contain the population and cases for all combinations of area id, date and individual level covariates.
+                       Areal covariates cannot contain any missing values."))),
 
 
   column(3, style = "height:750px;  margin:10px; border-style: solid;border-color:gray",
@@ -132,7 +151,9 @@ fluidRow(
          #Do not set min and max. Any date can be set.
          dateRangeInput("daterange", "Date range", start="1981-01-01", end="1984-01-01", format = "yyyy-mm-dd", separator = " to "),
          hr(),
-         radioButtons("SorSTButton", "Type of analysis", inline=TRUE, c("Spatial" = "S", "Spatio-temporal" = "ST"), selected="ST"),
+         conditionalPanel(condition = "input.typecovariates == 'individual'",
+         radioButtons("SorSTButton", "Type of analysis", inline=TRUE, c("Spatial" = "S", "Spatio-temporal" = "ST"), selected="ST")
+         ),
          hr(),
 
          #DELETE not input$useSampleData 2
@@ -268,6 +289,11 @@ tabPanel("Maps",
                           fluidRow(column(3,h4("Risk")), column(3,h4("2.5 percentile")), column(3,h4("97.5 percentile")), column(3)),
                           fluidRow(column(3,plotOutput("plot5")), column(3,plotOutput("plot6")), column(3,plotOutput("plot7")), column(3)),
                           fluidRow(column(3,plotOutput("plot5t")), column(3,plotOutput("plot6t")), column(3,plotOutput("plot7t")), column(3)))),
+
+tabPanel("Model results",
+         conditionalPanel(condition = "input.selectestimaterisk == 'done'",
+                          HTML("<br>"),
+                          fluidRow(column(12, verbatimTextOutput("voSummaryModel"))))),
 
 tabPanel("Clusters",
          conditionalPanel(condition = "input.selectdetectclusters == 'done'",

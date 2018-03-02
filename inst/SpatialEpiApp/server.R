@@ -38,6 +38,10 @@ hide("selectmakemapsOESIR")
     updateSelectInput(session, "columncov2indata",   choices = xd2, selected = head(xd2, 1))
     updateSelectInput(session, "columncov3indata",   choices = xd2, selected = head(xd2, 1))
     updateSelectInput(session, "columncov4indata",   choices = xd2, selected = head(xd2, 1))
+    updateSelectInput(session, "columnarealcov1indata",   choices = xd2, selected = head(xd2, 1))
+    updateSelectInput(session, "columnarealcov2indata",   choices = xd2, selected = head(xd2, 1))
+    updateSelectInput(session, "columnarealcov3indata",   choices = xd2, selected = head(xd2, 1))
+    updateSelectInput(session, "columnarealcov4indata",   choices = xd2, selected = head(xd2, 1))
 
   })
 
@@ -155,6 +159,7 @@ observeEvent(input$editInputsButton , {
   updateTextInput(session, "selectmakemapsOESIR", value = 'notdone')
   updateSelectInput(session, "vblePintar", label = "Variable to display",
                     choices = c("Population","Observed cases", "Expected cases","SIR"), selected = "Observed cases")
+
 })
 
 ################################################
@@ -321,10 +326,10 @@ fnDetectClustersSatscanInstalled<-function(executablepath){
 
   if(input$selectestimaterisk=="done"){
     updateSelectInput(session, "vblePintar", label = "Variable to display",
-                      choices = c("Population","Observed cases", "Expected cases","SIR","Risk","Clusters"),selected = "Observed cases")
+                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Risk",  "Clusters"),selected = "Observed cases")
   }else{
     updateSelectInput(session, "vblePintar", label = "Variable to display",
-                      choices = c("Population","Observed cases", "Expected cases","SIR","Clusters"),selected = "Observed cases")
+                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Clusters"),selected = "Observed cases")
 
   }
 }
@@ -362,19 +367,26 @@ fnEstimateRiskINLAInstalled<-function(){
 
   #Estimate risk
   withProgress(message = 'In progress. Estimate risk.', value = 0, {
-    rv$datoswithvaluesforeachidandtime<-fnEstimateRisk(rv$datoswithvaluesforeachidandtime,rv$map)
+   datosandres <-fnEstimateRisk(rv$datoswithvaluesforeachidandtime,rv$map,rv$usedarealcovs)
+    rv$datoswithvaluesforeachidandtime <- datosandres[[1]]
   })
 
+  # Save results
+  res <-  datosandres[[2]]
+  save(res, file = "res.rda")
+
+
+
   #Make maps
-  vecVblePintar<-c("Risk","LowerLimitCI","UpperLimitCI")
+  vecVblePintar<-c("Risk",  "LowerLimitCI","UpperLimitCI")
   fnMakeMapsWithProgress(vecVblePintar,discretedata="no",labelstext=NULL,labelsx=NULL,labelsy=NULL,allmapssamelegend="yes")
 
   if(input$selectdetectclusters=="done"){
     updateSelectInput(session, "vblePintar", label = "Variable to display",
-                      choices = c("Population","Observed cases", "Expected cases","SIR","Risk","Clusters"),selected = "Observed cases")
+                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Risk",  "Clusters"),selected = "Observed cases")
   }else{
     updateSelectInput(session, "vblePintar", label = "Variable to display",
-                      choices = c("Population","Observed cases", "Expected cases","SIR","Risk"),selected = "Observed cases")
+                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Risk"),selected = "Observed cases")
 
   }
 
@@ -398,6 +410,7 @@ datoswithvaluesforeachidandtime=NULL,
 datossatscan=NULL,
 lastselectstage=NULL,
 usedcovs=NULL,
+usedarealcovs=NULL,
 selectstage='stageuploaddata')
 
 
@@ -555,6 +568,7 @@ observe({
       file.rename(shpdf$datapath[i], shpdf$name[i])
     }
   setwd(previouswd)
+
   #map <- readShapePoly(paste(uploaddirectory, shpdf$name[grep(pattern="*.shp", shpdf$name)], sep="/"),  delete_null_obj=TRUE)
   #reads the file that finishes with .shp using $ at the end: grep(pattern="*.shp$", shpdf$name)
   map <- readOGR(paste(uploaddirectory, shpdf$name[grep(pattern="*.shp$", shpdf$name)], sep="/"))#,  delete_null_obj=TRUE)
@@ -578,6 +592,28 @@ rv$datosOriginal<-read.csv(inFile$datapath)
 
 observeEvent(input$startAnalysisButton, {
   shinyjs::disable("startAnalysisButton")
+
+
+  # If I use covariates of type areal, I set analysis to ST.
+  #It does not make sense to make spatial analysis because covariates cannot be aggregated
+  # If data only has one time model fitted will be spatial although it says ST
+  if(input$typecovariates == "areal"){
+    updateRadioButtons(session, "SorSTButton", selected = "ST")
+    #do not use individual covariates
+    updateSelectInput(session, "columncov1indata", selected = "-")
+    updateSelectInput(session, "columncov2indata", selected = "-")
+    updateSelectInput(session, "columncov3indata", selected = "-")
+    updateSelectInput(session, "columncov4indata", selected = "-")
+  }
+
+
+  if(input$typecovariates == "individual"){
+    #do not use areal covariates
+    updateSelectInput(session, "columnarealcov1indata", selected = "-")
+    updateSelectInput(session, "columnarealcov2indata", selected = "-")
+    updateSelectInput(session, "columnarealcov3indata", selected = "-")
+    updateSelectInput(session, "columnarealcov4indata", selected = "-")
+  }
 
 #############################
 #DELETE input$useSampleData 4
@@ -654,6 +690,26 @@ cov1<-input$columncov1indata
 cov2<-input$columncov2indata
 cov3<-input$columncov3indata
 cov4<-input$columncov4indata
+arealcov1<-input$columnarealcov1indata
+arealcov2<-input$columnarealcov2indata
+arealcov3<-input$columnarealcov3indata
+arealcov4<-input$columnarealcov4indata
+# I have modified the values of the covariates above but it does not work. I do it again
+#updateSelectInput(session, "columncov1indata", selected = "-")
+if(input$typecovariates == "areal"){
+  cov1 <- "-"
+  cov2 <- "-"
+  cov3 <- "-"
+  cov4 <- "-"
+}
+if(input$typecovariates == "individual"){
+  arealcov1 <- "-"
+  arealcov2 <- "-"
+  arealcov3 <- "-"
+  arealcov4 <- "-"
+}
+
+
 idinmap<-input$columnidareainmap
 temporalunit<-switch(input$temporalUnitButton, "Year" = "year", "Month" = "month", "Day" = "day")
 
@@ -696,15 +752,34 @@ if(cov2!="-"){ namesdatos<-c(namesdatos,cov2)}
 if(cov3!="-"){ namesdatos<-c(namesdatos,cov3)}
 if(cov4!="-"){ namesdatos<-c(namesdatos,cov4)}
 
+if(arealcov1!="-"){ namesdatos<-c(namesdatos,arealcov1)}
+if(arealcov2!="-"){ namesdatos<-c(namesdatos,arealcov2)}
+if(arealcov3!="-"){ namesdatos<-c(namesdatos,arealcov3)}
+if(arealcov4!="-"){ namesdatos<-c(namesdatos,arealcov4)}
+
 datosOriginal2<-data.frame(datosOriginal[,namesdatos])
 
 # Put new names
 namesdatosnew<-c("id","timeraw","pop","cases")
+
 usedcovs<-c("cov1","cov2","cov3","cov4")[which((c(cov1,cov2,cov3,cov4)!="-"))]
 rv$usedcovs<-usedcovs
 if(length(usedcovs)>0){
   namesdatosnew<-c(namesdatosnew,usedcovs)
 }
+
+usedarealcovs<-c(arealcov1, arealcov2, arealcov3, arealcov4)[which((c(arealcov1,arealcov2,arealcov3,arealcov4)!="-"))]
+rv$usedarealcovs<-usedarealcovs
+if(length(usedarealcovs)>0){
+  namesdatosnew<-c(namesdatosnew,usedarealcovs)
+
+
+  updateSelectInput(session, "vblePintar", label = "Variable to display",
+                    choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs), selected = "Observed cases")
+
+}
+
+
 names(datosOriginal2)<-namesdatosnew
 
 
@@ -782,7 +857,7 @@ if(is.null(datosOriginal2)){
 
 rv$messageCheckDataText<-""
 
-resCheckData<-fnCheckData(datosOriginal2, usedcovs, map, idinmap, temporalunit)
+resCheckData<-fnCheckData(datosOriginal2, usedcovs, map, idinmap, temporalunit, rv$usedarealcovs)
 
 if(class(resCheckData)=="character"){
   print(resCheckData)
@@ -852,7 +927,7 @@ if(class(resCheckData)=="character"){
   ################################
 
   # data with id, time, pop, O, E, SIR
-  datos2<-fnConstructData(datos, numstrata, vecid, vectime, temporalunit, timeformattedIfSpatial)
+  datos2<-fnConstructData(datos, numstrata, vecid, vectime, temporalunit, timeformattedIfSpatial, rv$usedarealcovs)
 
   # Create integer idtime for fitting INLA
   uniquetimes<-sort(unique(datos2$time))
@@ -975,6 +1050,10 @@ mapFiltered<-map[which(map@data[, rv$columnnamesuperareainmap] == input$superare
 #}
 
 
+rv$vblePintar <- input$vblePintar
+#if it is not an areal covariate, then choose with switch
+#populate with covariates when I do estimate risk and clusters
+if(!(input$vblePintar %in% rv$usedarealcovs)){
 rv$vblePintar <- switch(input$vblePintar,
                         "Observed cases" = "Observed",
                         "Expected cases" = "Expected",
@@ -982,6 +1061,12 @@ rv$vblePintar <- switch(input$vblePintar,
                         "Risk"="Risk",
                         "Clusters"="Clusters",
                         "Population"="Population")
+}
+
+
+
+
+
 
 # Calculate min and max of values to put them in the sliderInput
 # If I render the leaflet again put idpolyhighlighted so it does not show anything
@@ -990,8 +1075,14 @@ rv$idpolyhighlighted <-NULL
 
 #updateSliderInput with min and max risk in the filtered dataset
 #if(nrow(mapFiltered)>0){
-valmin<-max(0,round(min(mapFiltered@data[,paste0(rv$vblePintar,"time", vv())], na.rm=TRUE),2)-0.01)
-valmax<-round(max(mapFiltered@data[,paste0(rv$vblePintar,"time", vv())], na.rm=TRUE),2)+0.01
+
+mapvalor <- mapFiltered@data[,paste0(rv$vblePintar,"time", vv())]
+valmin <- floor(min(mapvalor, na.rm=TRUE ) * 100) / 100
+valmax <- ceiling(max(mapvalor, na.rm=TRUE ) * 100) / 100
+
+#valmin<-max(0,round(min(mapFiltered@data[,paste0(rv$vblePintar,"time", vv())], na.rm=TRUE),2)-0.01)
+#valmax<-round(max(mapFiltered@data[,paste0(rv$vblePintar,"time", vv())], na.rm=TRUE),2)+0.01
+
 #}
 
 rv$minrisk<-valmin
@@ -1304,10 +1395,12 @@ datasetInput <- reactive({
   #put in columns 1 and 2 timeformatted and id area first. Change names columns at the end
   tablaparamostrar[,1]<-tablaparamostrar[,"timeformatted"]
   tablaparamostrar[,2]<-tablaparamostrar[,"id"]
-  #delete id (area), date, idtime
-  tablaparamostrar<-tablaparamostrar[,-c(6,11,12)]
+  #delete id (area), date, idtime #delete timeformatted idtime
+  tablaparamostrar<-tablaparamostrar[, -6]
+  tablaparamostrar<-tablaparamostrar[, -which(names(tablaparamostrar)=="timeformatted")]
+  tablaparamostrar<-tablaparamostrar[, -which(names(tablaparamostrar)=="idtime")]
   if(rv$columnnamesuperareainmap=="-"){
-    tablaparamostrar<-tablaparamostrar[,-5]
+    tablaparamostrar<-tablaparamostrar[, -5]
   }
 
 
@@ -1372,6 +1465,8 @@ staticdate<-reactive({
 })
 
 
+
+
 output$staticdate1<-renderText({
     staticdate()
 
@@ -1383,6 +1478,17 @@ output$staticdate2<-renderText({
 output$staticdate3<-renderText({
   staticdate()
 })
+
+
+output$voSummaryModel <- renderPrint({
+  # show when conditionalpanel (estimaterisk button is pressed) and vv() changes
+  vv()
+  load("res.rda")
+  print(summary(res))
+
+  })
+
+
 
 
 output$plot1 <- renderImage({
@@ -1462,6 +1568,7 @@ output$plotclusterst <- renderImage({
   fecha<-vv()
   filename <- normalizePath(file.path(paste("plots/TemporalTrend","Clusters.png",sep="")))
   list(src = filename, width = 300, height = 300)}, deleteFile = FALSE)
+
 
 
 ############################################
@@ -1569,7 +1676,7 @@ output$staticsummary <- renderPrint({
   datostime<-datosP[which(datosP$time==vv()),]
   vecVbles<-c("Population","Observed","Expected","SIR")
   if(input$selectestimaterisk=="done"){
-  vecVbles<-c(vecVbles,"Risk","LowerLimitCI","UpperLimitCI")
+  vecVbles<-c(vecVbles,"Risk",  "LowerLimitCI","UpperLimitCI")
   }
   s<-datostime[, vecVbles]
     print(summary(s))
@@ -1589,7 +1696,7 @@ vecVblesPintarReport<-reactive({
     vecVbles<-c("Population","Observed","Expected","SIR")
   }
   if(input$selectestimaterisk=="done"){
-    vecVbles<-c(vecVbles,"Risk","LowerLimitCI","UpperLimitCI")
+    vecVbles<-c(vecVbles,"Risk",  "LowerLimitCI","UpperLimitCI")
   }
   if(input$selectdetectclusters=="done"){
     vecVbles<-c(vecVbles,"Clusters")
@@ -1601,7 +1708,7 @@ vecVblesTablaReport<-reactive({
   vecVbles<-NULL
     vecVbles<-c("Population","Observed","Expected","SIR")
   if(input$selectestimaterisk=="done"){
-    vecVbles<-c(vecVbles,"Risk","LowerLimitCI","UpperLimitCI")
+    vecVbles<-c(vecVbles,"Risk",  "LowerLimitCI","UpperLimitCI")
   }
   if(input$selectdetectclusters=="done"){
     vecVbles<-c(vecVbles,"Clusters")
@@ -1635,6 +1742,7 @@ output$report <- downloadHandler(
     }else{
       tc<-NULL
     }
+
 
 
     params <- list(daterange = dr(), typeofanalysis=sorst() , temporalunit=input$temporalUnitButton, datosP=datosP,

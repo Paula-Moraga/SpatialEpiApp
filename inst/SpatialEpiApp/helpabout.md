@@ -17,7 +17,7 @@
 
 To cite **SpatialEpiApp** in publications use:
 
-Paula Moraga (2017), SpatialEpiApp: A Shiny web application for the analysis of spatial and spatio-temporal disease data. Spatial and Spatio-temporal Epidemiology.
+Paula Moraga (2017), SpatialEpiApp: A Shiny web application for the analysis of spatial and spatio-temporal disease data. Spatial and Spatio-temporal Epidemiology, 23:47-57
 DOI: https://doi.org/10.1016/j.sste.2017.08.001
 
 
