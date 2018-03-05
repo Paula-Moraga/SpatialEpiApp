@@ -326,7 +326,7 @@ fnDetectClustersSatscanInstalled<-function(executablepath){
 
   if(input$selectestimaterisk=="done"){
     updateSelectInput(session, "vblePintar", label = "Variable to display",
-                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Risk", "RiskTimesExpected",  "Clusters"),selected = "Observed cases")
+                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Risk", "Risk x Expected",  "Clusters"),selected = "Observed cases")
   }else{
     updateSelectInput(session, "vblePintar", label = "Variable to display",
                       choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Clusters"),selected = "Observed cases")
@@ -383,10 +383,10 @@ fnEstimateRiskINLAInstalled<-function(){
 
   if(input$selectdetectclusters=="done"){
     updateSelectInput(session, "vblePintar", label = "Variable to display",
-                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Risk","RiskTimesExpected",  "Clusters"),selected = "Observed cases")
+                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Risk","Risk x Expected",  "Clusters"),selected = "Observed cases")
   }else{
     updateSelectInput(session, "vblePintar", label = "Variable to display",
-                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Risk","RiskTimesExpected"),selected = "Observed cases")
+                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Risk","Risk x Expected"),selected = "Observed cases")
 
   }
 
@@ -1059,7 +1059,7 @@ rv$vblePintar <- switch(input$vblePintar,
                         "Expected cases" = "Expected",
                         "SIR" = "SIR",
                         "Risk"="Risk",
-                        "RiskTimesExpected"="RiskTimesExpected",
+                        "Risk x Expected"="RiskTimesExpected",
                         "Clusters"="Clusters",
                         "Population"="Population")
 }
@@ -1247,7 +1247,7 @@ if(nrow(selected)>0){
 if("Risk" %in% names(selected@data) ){
 areariskinfo <- paste0(areariskinfo, "<br><strong>&nbsp;Risk: </strong>" ,round(selected@data[,"Risk"],2),
                          ", 95% CI: (", round(selected@data[,"LowerLimitCI"],2),",", round(selected@data[,"UpperLimitCI"],2),")&nbsp;",
-                       "<br><strong>&nbsp;RiskTimesExpected: </strong>" ,round(selected@data[,"RiskTimesExpected"],2),
+                       "<br><strong>&nbsp;Risk x Expected: </strong>" ,round(selected@data[,"RiskTimesExpected"],2),
                        ", 95% CI: (", round(selected@data[,"RiskTimesExpectedLLCI"],2),",", round(selected@data[,"RiskTimesExpectedULCI"],2),")&nbsp;")
 }
 
@@ -1412,6 +1412,11 @@ datasetInput <- reactive({
   nt[2]<- "ID area numeric"
   nt<-replace(nt, which(nt=="idArea"), "ID area")
   nt<-replace(nt, which(nt=="nameArea"), "Name area")
+  nt<-replace(nt, which(nt=="LowerLimitCI"), "Risk LL 95%CI")
+  nt<-replace(nt, which(nt=="UpperLimitCI"), "Risk UL 95%CI")
+  nt<-replace(nt, which(nt=="RiskTimesExpected"), "Risk x Expected")
+  nt<-replace(nt, which(nt=="RiskTimesExpectedLLCI"), "Risk x Expected 95%CI")
+  nt<-replace(nt, which(nt=="RiskTimesExpectedULCI"), "Risk x Expected 95%CI")
   names(tablaparamostrar)<-nt
 
   tablaparamostrar
