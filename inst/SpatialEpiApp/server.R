@@ -1676,7 +1676,7 @@ output$staticsummary <- renderPrint({
   datostime<-datosP[which(datosP$time==vv()),]
   vecVbles<-c("Population","Observed","Expected","SIR")
   if(input$selectestimaterisk=="done"){
-  vecVbles<-c(vecVbles,"Risk",  "LowerLimitCI","UpperLimitCI")
+  vecVbles<-c(vecVbles,"Risk",  "LowerLimitCI","UpperLimitCI","RiskTimesExpected")
   }
   s<-datostime[, vecVbles]
     print(summary(s))

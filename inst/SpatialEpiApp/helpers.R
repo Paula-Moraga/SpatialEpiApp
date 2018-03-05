@@ -571,6 +571,7 @@ fnEstimateRisk <- function(datos, map, usedarealcovs) {
   datos$Risk<-res$summary.fitted.values[,"mean"]
   datos$LowerLimitCI<-res$summary.fitted.values[,"0.025quant"]
   datos$UpperLimitCI<-res$summary.fitted.values[,"0.975quant"]
+  datos$RiskTimesExpected <- datos$Risk * datos$Expected
 
   return(list(datos, res))
 
