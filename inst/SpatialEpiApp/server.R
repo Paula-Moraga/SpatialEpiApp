@@ -326,7 +326,7 @@ fnDetectClustersSatscanInstalled<-function(executablepath){
 
   if(input$selectestimaterisk=="done"){
     updateSelectInput(session, "vblePintar", label = "Variable to display",
-                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Risk",  "Clusters"),selected = "Observed cases")
+                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Risk", "RiskTimesExpected",  "Clusters"),selected = "Observed cases")
   }else{
     updateSelectInput(session, "vblePintar", label = "Variable to display",
                       choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Clusters"),selected = "Observed cases")
@@ -383,10 +383,10 @@ fnEstimateRiskINLAInstalled<-function(){
 
   if(input$selectdetectclusters=="done"){
     updateSelectInput(session, "vblePintar", label = "Variable to display",
-                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Risk",  "Clusters"),selected = "Observed cases")
+                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Risk","RiskTimesExpected",  "Clusters"),selected = "Observed cases")
   }else{
     updateSelectInput(session, "vblePintar", label = "Variable to display",
-                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Risk"),selected = "Observed cases")
+                      choices = c("Population","Observed cases", "Expected cases","SIR", rv$usedarealcovs,"Risk","RiskTimesExpected"),selected = "Observed cases")
 
   }
 
@@ -1059,6 +1059,7 @@ rv$vblePintar <- switch(input$vblePintar,
                         "Expected cases" = "Expected",
                         "SIR" = "SIR",
                         "Risk"="Risk",
+                        "RiskTimesExpected"="RiskTimesExpected",
                         "Clusters"="Clusters",
                         "Population"="Population")
 }
