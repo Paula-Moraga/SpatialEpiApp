@@ -1246,7 +1246,9 @@ if(nrow(selected)>0){
 #If Risk, LowerLimitCI and UpperLimitCI are calculated
 if("Risk" %in% names(selected@data) ){
 areariskinfo <- paste0(areariskinfo, "<br><strong>&nbsp;Risk: </strong>" ,round(selected@data[,"Risk"],2),
-                         ", 95% CI: (", round(selected@data[,"LowerLimitCI"],2),",", round(selected@data[,"UpperLimitCI"],2),")&nbsp;")
+                         ", 95% CI: (", round(selected@data[,"LowerLimitCI"],2),",", round(selected@data[,"UpperLimitCI"],2),")&nbsp;",
+                       "<br><strong>&nbsp;RiskTimesExpected: </strong>" ,round(selected@data[,"RiskTimesExpected"],2),
+                       ", 95% CI: (", round(selected@data[,"RiskTimesExpectedLLCI"],2),",", round(selected@data[,"RiskTimesExpectedULCI"],2),")&nbsp;")
 }
 
 if("Clusters" %in% names(selected@data) ){
@@ -1677,7 +1679,7 @@ output$staticsummary <- renderPrint({
   datostime<-datosP[which(datosP$time==vv()),]
   vecVbles<-c("Population","Observed","Expected","SIR")
   if(input$selectestimaterisk=="done"){
-  vecVbles<-c(vecVbles,"Risk",  "LowerLimitCI","UpperLimitCI","RiskTimesExpected")
+  vecVbles<-c(vecVbles,"Risk",  "LowerLimitCI","UpperLimitCI","RiskTimesExpected","RiskTimesExpectedLLCI","RiskTimesExpectedULCI")
   }
   s<-datostime[, vecVbles]
     print(summary(s))
