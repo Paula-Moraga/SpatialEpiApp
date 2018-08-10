@@ -77,7 +77,7 @@ conditionalPanel(condition = "input.selectstage == 'stageuploaddata'",
 
 
 fluidRow(
-  column(4, style = "height:750px;  margin:10px; border-style: solid;border-color:gray",
+  column(4, style = "height:800px;  margin:10px; border-style: solid;border-color:gray",
 
          h3("1. Upload map (shapefile)"),
 
@@ -95,7 +95,7 @@ fluidRow(
 
 
 
-  column(4, style = "height:750px;  margin:10px; border-style: solid;border-color:gray",
+  column(4, style = "height:800px;  margin:10px; border-style: solid;border-color:gray",
 
          h3("2. Upload data (.csv file)"),
 
@@ -140,7 +140,7 @@ fluidRow(
                        Areal covariates cannot contain any missing values."))),
 
 
-  column(3, style = "height:750px;  margin:10px; border-style: solid;border-color:gray",
+  column(3, style = "height:800px;  margin:10px; border-style: solid;border-color:gray",
 
          h3("3. Select analysis"),
 

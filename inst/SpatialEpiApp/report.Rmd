@@ -104,7 +104,7 @@ cat(
 for(i in 1:n){
 f<-paste(vecTimes[i])
 fcorrecto<-fechasformatocorrecto[i]
-vecf<-paste("plots/Map",vecTimes[i],vecVblesPintar,".png",sep="")
+vecf<-paste(getwd(), "/plots/Map",vecTimes[i],vecVblesPintar,".png",sep="")
 #cat(sprintf("\\raisebox{2cm}{%s}", paste(fcorrecto,f)))
 cat(sprintf("\\raisebox{1.5cm}{%s}", paste(fcorrecto)))
 for(j in 1:length(vecVblesPintar)){
@@ -112,7 +112,7 @@ cat(sprintf("&\\includegraphics[width=%dmm]{%s}", sizemaps, vecf[j]))
 }
 cat(sprintf("\\\\[.5cm]")) 
 }
-veclastf<-paste("plots/TemporalTrend",vecVblesPintar,".png",sep="")
+veclastf<-paste(getwd(), "/plots/TemporalTrend",vecVblesPintar,".png",sep="")
 for(j in 1:length(vecVblesPintar)){
 cat(sprintf("&\\includegraphics[width=%dmm]{%s}", sizemaps, veclastf[j]))
 }
