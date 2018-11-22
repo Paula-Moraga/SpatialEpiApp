@@ -1362,11 +1362,13 @@ if(is.null(rv$idpolyhighlighted)){
 d1
 }else{
   #Add dySeries of the highlighted area
-  colorpolyhightlighted<-rvcolores[isolate(rv$posinmapFilteredIdpolyhighlighted)]
+  ##colorpolyhightlighted<-rvcolores[isolate(rv$posinmapFilteredIdpolyhighlighted)]
   #I can put in dyOptions color=rvcolores so they have the same colours as in the map
   #I want to put in dySeries colorpolyhightlighted but it does not work
-  nameseries<-as.character(isolate(rv$idpolyhighlighted))
-  d1<- d1 %>%  dySeries(nameseries, strokeWidth=6, label=nameseries)
+  ##nameseries<-as.character(isolate(rv$idpolyhighlighted))
+  ##d1<- d1 %>%  dySeries(nameseries, strokeWidth=6, label=nameseries)
+
+  d1
 
   }
 
