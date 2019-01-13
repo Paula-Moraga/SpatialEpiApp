@@ -1362,11 +1362,31 @@ if(is.null(rv$idpolyhighlighted)){
 d1
 }else{
   #Add dySeries of the highlighted area
-  ##colorpolyhightlighted<-rvcolores[isolate(rv$posinmapFilteredIdpolyhighlighted)]
+  colorpolyhightlighted<-rvcolores[isolate(rv$posinmapFilteredIdpolyhighlighted)]
   #I can put in dyOptions color=rvcolores so they have the same colours as in the map
   #I want to put in dySeries colorpolyhightlighted but it does not work
-  ##nameseries<-as.character(isolate(rv$idpolyhighlighted))
+  nameseries<-as.character(isolate(rv$idpolyhighlighted))
+  # Adding dySeries()  to d1 does not work if I do this.
   ##d1<- d1 %>%  dySeries(nameseries, strokeWidth=6, label=nameseries)
+  # I need to copy all code of dygraph(),... and put dySeries() in the second position
+
+  d1 <- dygraph(datosxts) %>%  dySeries(nameseries, strokeWidth=6, label=nameseries) %>%
+    dyRangeSelector() %>%
+    dyHighlight(highlightCircleSize = 3, highlightSeriesBackgroundAlpha = 0.3, hideOnMouseOut = FALSE)%>%
+    #dyLegend(labelsDiv = "legendDivID")%>%
+    dyEvent(vv(), strokePattern="dashed") %>%
+    dyCSS("dygraph.css") %>%
+    dyOptions(drawGrid = FALSE, colors="gray", strokeWidth = 0.3)
+
+
+  # I need to repeat this because I have created d1 again
+  if(input$temporalUnitButton=="Year"){
+    d1<- d1 %>%  dyAxis("x", axisLabelFormatter=JS(FUNC_JSFormatNumberYear))
+  }
+  if(input$temporalUnitButton=="Month"){
+    d1<- d1 %>%  dyAxis("x", axisLabelFormatter=JS(FUNC_JSFormatNumberYearMonth))
+  }
+
 
   d1
 
