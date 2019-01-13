@@ -23,7 +23,7 @@ With `SpatialEpiApp`, we simply need to upload the map and data and then click t
 This [blog post](https://paula-moraga.github.io/blog/2018/01/04/2018-01-04_spatialepiapp/), and the package [vignette](https://cran.r-project.org/web/packages/SpatialEpiApp/vignettes/manual.pdf) can be checked for more details about its use, methods and examples. Data for running examples are in https://Paula-Moraga.github.io/software
 
 
-** References **
+**References**
 
 Moraga, P. (2017), [SpatialEpiApp: A Shiny Web Application for the analysis of Spatial and Spatio-Temporal Disease Data](https://doi.org/10.1016/j.sste.2017.08.001). Spatial and Spatio-temporal Epidemiology, 23:47-57
 
