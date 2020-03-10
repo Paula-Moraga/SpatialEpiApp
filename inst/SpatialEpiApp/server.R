@@ -1196,7 +1196,7 @@ rv$colores<-pal(values)
 ids<-as.integer(as.vector(mapFiltered@data[, "id"]))
 
 leaflet(mapFiltered) %>%
-        addProviderTiles("OpenStreetMap.BlackAndWhite", options = providerTileOptions(noWrap = TRUE))  %>%
+        addProviderTiles("OpenStreetMap", options = providerTileOptions(noWrap = TRUE))  %>%
         addPolygons(data=mapFiltered, layerId=ids, fillColor = ~pal(values), smoothFactor = 0.2, fillOpacity = 0.9, stroke=FALSE)  %>%
   leaflet::addLegend("bottomright", pal = pal, values = values, title = input$vblePintar, labFormat = labelFormat(prefix = ""), opacity = 1)
 
